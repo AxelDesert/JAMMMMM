@@ -5,14 +5,17 @@
 ** Display
 */
 
-
 #ifndef JAMMMMM_DISPLAY_HPP
 #define JAMMMMM_DISPLAY_HPP
 #include "SFML/Window.hpp"
+#include "soundType.hpp"
 #include "Obstaculo.hpp"
+#include "SoundManager.hpp"
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <iostream>
 #include <vector>
+#include <cmath>
 
 class Display {
     public:
@@ -26,7 +29,7 @@ class Display {
         sf::Sprite configuarAssetJugador();
         sf::Sprite configuarPapelPintadoDia();
         void moverPapelPintado(sf::Clock &tiempo, float &map);
-        void animarPlayer(sf::Clock &tiempo, int &actual);
+        void animarPlayer(sf::Clock &tiempo, int &actual, bool &res);
         void buclejuego();
         void secuso(sf::Event event);
         void actualizarObstaculos();
@@ -51,6 +54,7 @@ class Display {
         sf::Texture _textureObstaculo;
         float _tiempoUltimoObstaculo = 0;
         estadoJuego _estadoJuego = INICIO;
+        SoundManager _soundManager;
 };
 
 

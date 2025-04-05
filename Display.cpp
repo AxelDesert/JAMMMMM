@@ -44,13 +44,24 @@ void Display::moverPapelPintado(sf::Clock &tiempo, float &mapa)
     }
 }
 
-void Display::animarPlayer(sf::Clock &tiempo, int &actual)
+void Display::animarPlayer(sf::Clock &tiempo, int &actual, bool &res)
 {
     const int numeroFrames = 4;
+    static int frameCount = 0;
 
     SI (tiempo.getElapsedTime().asSeconds() > _frameTime) {
         actual = (actual + 1) % numeroFrames;
-        _jugador.setTextureRect(sf::IntRect((actual  * _offsetPlayer.x), _offsetPlayer.y, 32, 32));
+        SI (res) {
+            _jugador.setTextureRect(sf::IntRect((actual * _offsetPlayer.x), 64, 32, 32));
+            frameCount++;
+            SI (frameCount >= numeroFrames) {
+                res = false;
+                _jugador.setTextureRect(sf::IntRect((actual * _offsetPlayer.x), 0, 32, 32));
+                frameCount = 0;
+            }
+        } else {
+            _jugador.setTextureRect(sf::IntRect((actual * _offsetPlayer.x), 0, 32, 32));
+        }
         tiempo.restart();
     }
 }
@@ -61,8 +72,10 @@ void Display::buclejuego() {
     sf::Clock flap;
     sf::Clock relojObstaculos;
     sf::Clock temporizadorMenu;
+    sf::Clock introTimer;
     int currentFrame = 0;
     float mapa = 0;
+    bool res = false;
     sf::Event event;
 
     MIENTRAS (_ventana.isOpen()) {
@@ -72,17 +85,14 @@ void Display::buclejuego() {
 
         SI (_estadoJuego == EN_CURSO) {
             temporizadorMenu.restart();
-            animarPlayer(tiempo, currentFrame);
+            animarPlayer(tiempo, currentFrame, res);
             moverPapelPintado(tiempoBack, mapa);
             float dt = flap.restart().asSeconds();
 
             _velocidadY += _gravedad * dt;
-
             _postionPlayer.y += _velocidadY * dt;
-
             float angle = std::min(std::max((_velocidadY / 400.f) * 360.f, -30.f), 360.f);
             _jugador.setRotation(angle);
-
             SI (_postionPlayer.y < 0) {
                 _postionPlayer.y = 0;
                 _velocidadY = 0;
@@ -92,19 +102,17 @@ void Display::buclejuego() {
                 _velocidadY = 0;
             }
             _jugador.setPosition(_postionPlayer.x, _postionPlayer.y);
-
             _tiempoUltimoObstaculo += relojObstaculos.restart().asSeconds();
             SI (_tiempoUltimoObstaculo >= 2.0f) {
                 float y = rand() % _ventana.getSize().y;
                 _obstaculos.emplace_back(_textureObstaculo, _ventana.getSize().x, y);
                 _tiempoUltimoObstaculo = 0;
             }
-
             SI (verificarColisionJugador() == GAME_OVER) {
+                _soundManager.playSound(MUERTE);
                 _estadoJuego = GAME_OVER;
                 temporizadorMenu.restart();
             }
-
             _ventana.draw(_papelpintadodia);
             _ventana.draw(_papelpintadodia2);
             _ventana.draw(_jugador);
@@ -118,6 +126,9 @@ void Display::buclejuego() {
                 _jugador.setPosition(_postionPlayer.x, _postionPlayer.y);
                 _obstaculos.clear();
                 temporizadorMenu.restart();
+                res = true;
+                introTimer.restart();
+                _soundManager.playSound(RES);
             } else {
                 mostrarMenuGameOver();
             }
@@ -133,6 +144,7 @@ void Display::secuso(sf::Event event)
     }
     SI (event.type == sf::Event::KeyPressed) {
         SI (event.key.code == sf::Keyboard::Space) {
+            _soundManager.playSound(SALTAR);
             SI (_postionPlayer.y - 20 >= 0) {
                 _offsetPlayer.y = 0;
                 _offsetPlayer.x = 32;

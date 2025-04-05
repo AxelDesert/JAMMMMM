@@ -55,9 +55,12 @@ void Display::mostrarMenuGameOver() {
                         _estadoJuego = EN_CURSO;
                         _jugador.setPosition(_postionPlayer.x, _postionPlayer.y);
                         _obstaculos.clear();
+                        _soundManager.playSound(BOTON);
                         return;
                     }
                     if (salir.getGlobalBounds().contains(evento.mouseButton.x, evento.mouseButton.y)) {
+                        _soundManager.playSound(BOTON);
+                        sf::sleep(sf::seconds(1));
                         _ventana.close();
                     }
                 }
@@ -66,9 +69,12 @@ void Display::mostrarMenuGameOver() {
                         _estadoJuego = EN_CURSO;
                         _jugador.setPosition(_postionPlayer.x, _postionPlayer.y);
                         _obstaculos.clear();
+                        _soundManager.playSound(BOTON);
                         return;
                     }
                     if (salir.getGlobalBounds().contains(evento.mouseButton.x, evento.mouseButton.y)) {
+                        _soundManager.playSound(BOTON);
+                        sf::sleep(sf::seconds(1));
                         _ventana.close();
                     }
                 }

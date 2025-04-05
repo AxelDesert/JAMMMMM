@@ -8,13 +8,14 @@
 SRC =		main.cpp \
 			Display.cpp \
 			Obstaculo.cpp	\
-			menu.cpp
+			menu.cpp	\
+			SoundManager.cpp
 
 OBJ = $(SRC:src/%.c=obj/%.o)
 
 NAME = my_phoenix
 
-CPPFLAGS = -Wall -Wextra -lsfml-graphics -lsfml-window -lsfml-system -g
+CPPFLAGS = -Wall -Wextra -lsfml-graphics -lsfml-audio -lsfml-window -lsfml-system -g
 
 all: $(NAME)
 
