@@ -36,7 +36,7 @@ public:
     void actualizarVelocidad();
     estadoJuego verificarColisionJugador();
     void mostrarMenuGameOver();
-    void monstrarScore();
+    void monstrarSantos();
 
 private:
     float _tiempoDeActualizacion;
@@ -63,6 +63,7 @@ private:
     estadoJuego _estadoJuego = INICIO;
     SoundManager _soundManager;
     sf::Text _textsantos;
+    sf::Font _font;
 };
 
 
