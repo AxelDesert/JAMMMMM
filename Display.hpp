@@ -34,6 +34,9 @@ class Display {
         void mostrarMenuGameOver();
 
     private:
+        float _velocidadY = 0.0f;
+        float _gravedad = 900.0f;
+        float _salto = -350.0f;
         sf::RenderWindow _ventana;
         sf::Sprite _jugador;
         sf::Sprite _papelpintadodia;
