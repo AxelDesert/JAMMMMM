@@ -53,6 +53,9 @@ void Display::mostrarMenuGameOver() {
                 if (_estadoJuego == GAME_OVER) {
                     if (continuar.getGlobalBounds().contains(evento.mouseButton.x, evento.mouseButton.y)) {
                         _estadoJuego = EN_CURSO;
+                        _santos = 0;
+                        _velocidadBase = 1.0f;
+                        _tiempoDeActualizacion = 0.002f;
                         _jugador.setPosition(_postionPlayer.x, _postionPlayer.y);
                         _obstaculos.clear();
                         _soundManager.playSound(BOTON);
