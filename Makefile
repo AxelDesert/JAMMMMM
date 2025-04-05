@@ -6,7 +6,9 @@
 ##
 
 SRC =		main.cpp \
-			Display.cpp
+			Display.cpp \
+			Obstaculo.cpp	\
+			menu.cpp
 
 OBJ = $(SRC:src/%.c=obj/%.o)
 

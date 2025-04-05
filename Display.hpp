@@ -9,18 +9,30 @@
 #ifndef JAMMMMM_DISPLAY_HPP
 #define JAMMMMM_DISPLAY_HPP
 #include "SFML/Window.hpp"
+#include "Obstaculo.hpp"
 #include <SFML/Graphics.hpp>
 #include <iostream>
-
+#include <vector>
 
 class Display {
     public:
+        enum estadoJuego {
+            INICIO,
+            EN_CURSO,
+            GAME_OVER
+        };
+
         Display();
         sf::Sprite configuarAssetJugador();
         sf::Sprite configuarPapelPintadoDia();
         void moverPapelPintado(sf::Clock &tiempo, float &map);
         void animarPlayer(sf::Clock &tiempo, int &actual);
         void buclejuego();
+        void secuso(sf::Event event);
+        void actualizarObstaculos();
+        estadoJuego verificarColisionJugador();
+        void mostrarMenuGameOver();
+
     private:
         sf::RenderWindow _ventana;
         sf::Sprite _jugador;
@@ -32,6 +44,10 @@ class Display {
         sf::Texture _textureBackground;
         sf::Vector2i _offsetPlayer;
         float _frameTime;
+        std::vector<Obstaculo> _obstaculos;
+        sf::Texture _textureObstaculo;
+        float _tiempoUltimoObstaculo = 0;
+        estadoJuego _estadoJuego = INICIO;
 };
 
 

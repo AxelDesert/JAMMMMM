@@ -30,3 +30,7 @@
 *.exe
 *.out
 *.app
+
+.idea
+my_phoenix
+.clang-format
