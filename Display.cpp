@@ -152,7 +152,7 @@ void Display::buclejuego() {
             for (const auto& obs : _obstaculos) {
                 obs.dibujar(_ventana);
             }
-            monstrarSantos();
+            monstrarSantos(5,5,30);
             _ventana.draw(_textsantos);
             _ventana.display();
             _ventana.clear();
@@ -165,7 +165,6 @@ void Display::buclejuego() {
                 _estadoJuego = EN_CURSO;
                 _jugador.setPosition(_postionPlayer.x, _postionPlayer.y);
                 _obstaculos.clear();
-                _santos = 0;
                 _velocidadBase = 1.0f;
                 _tiempoEntreObstaculos = 1.0f;
                 temporizadorMenu.restart();
@@ -195,7 +194,7 @@ void Display::secuso(sf::Event event)
     }
 }
 
-void Display::monstrarSantos()
+void Display::monstrarSantos(int posX, int posY, int size)
 {
     sf::Font font;
     if (!font.loadFromFile("assets/Roboto.ttf")) {
@@ -207,10 +206,10 @@ void Display::monstrarSantos()
     int intsanto = _santos;
     std::string gato = std::to_string((intsanto / 10));
     _textsantos.setString("Score : " + gato);
-    _textsantos.setCharacterSize(30);
+    _textsantos.setCharacterSize(size);
     _textsantos.setFillColor(sf::Color::Black);
     _textsantos.setStyle(sf::Text::Bold);
-    _textsantos.setPosition(5, 5);
+    _textsantos.setPosition(posX, posY);
 }
 
 Display::estadoJuego Display::verificarColisionJugador()

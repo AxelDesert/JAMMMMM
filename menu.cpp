@@ -37,6 +37,8 @@ void Display::mostrarMenuGameOver() {
     overlay.setFillColor(sf::Color(0, 0, 0, 150));
     _ventana.draw(overlay);
     if (_estadoJuego == GAME_OVER) {
+        monstrarSantos(390, 140, 50);
+        _ventana.draw(_textsantos);
         _ventana.draw(continuar);
         _ventana.draw(salir);
     }

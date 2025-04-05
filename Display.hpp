@@ -36,7 +36,7 @@ public:
     void actualizarVelocidad();
     estadoJuego verificarColisionJugador();
     void mostrarMenuGameOver();
-    void monstrarSantos();
+    void monstrarSantos(int posX, int posY, int size);
 
 private:
     float _tiempoDeActualizacion;
