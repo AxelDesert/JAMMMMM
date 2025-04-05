@@ -181,6 +181,21 @@ void Display::secuso(sf::Event event)
     }
 }
 
+void Display::mostrarScore()
+{
+    sf::Font font;
+    if (!font.loadFromFile("assets/Roboto.ttf")) {
+        return -1;
+    }
+    _textsantos.setFont(font);
+    std::string gato = std::to_string(_santos);
+    _textsantos.setString(gato);
+    _textsantos.setCharacterSize(30);
+    _textsantos.setFillColor(sf::Color::Black);
+    _textsantos.setStyle(sf::Text::Bold | sf::Text::Underlined);
+    _textsantos.setPosition(100, 100);
+}
+
 Display::estadoJuego Display::verificarColisionJugador()
 {
     for (const auto& obs : _obstaculos) {
