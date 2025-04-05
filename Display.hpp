@@ -61,6 +61,7 @@ private:
     float _tiempoUltimoObstaculo = 0;
     estadoJuego _estadoJuego = INICIO;
     SoundManager _soundManager;
+    sf::View _vueOriginale;
 };
 
 

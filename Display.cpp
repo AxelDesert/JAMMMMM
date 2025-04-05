@@ -23,6 +23,7 @@ Display::Display() : _ventana(sf::VideoMode(1000, 470), "Mi_phoenix") {
     _tiempoDeActualizacion = 0.002f;  // Temps entre chaque mise à jour (remplace _goncalves)
     SI (!_textureObstaculo.loadFromFile("assets/littleWater.png"))
         std::cout << "no d'asset" << std::endl;
+    _vueOriginale = _ventana.getDefaultView();
 }
 
 void Display::moverPapelPintado(sf::Clock &tiempo, float &mapa)
@@ -52,6 +53,7 @@ void Display::moverPapelPintado(sf::Clock &tiempo, float &mapa)
 void Display::animarPlayer(sf::Clock &tiempo, int &actual, bool &res)
 {
     const int numeroFrames = 5;
+    const int zoomFrames = 10;
     static int frameCount = 0;
 
     SI (tiempo.getElapsedTime().asSeconds() > _frameTime) {
@@ -59,17 +61,25 @@ void Display::animarPlayer(sf::Clock &tiempo, int &actual, bool &res)
         SI (res) {
             _jugador.setTextureRect(sf::IntRect((actual * _offsetPlayer.x), 64, 32, 32));
             frameCount++;
-            SI (frameCount >= numeroFrames) {
+            sf::View zoomView = _vueOriginale;
+            zoomView.setSize(_vueOriginale.getSize().x / 1.5f, _vueOriginale.getSize().y / 1.5f); // zoom x1.5
+            zoomView.setCenter(_jugador.getPosition());
+            _ventana.setView(zoomView);
+            SI (frameCount >= zoomFrames) {
                 res = false;
                 _jugador.setTextureRect(sf::IntRect((actual * _offsetPlayer.x), 0, 32, 32));
                 frameCount = 0;
+                _ventana.setView(_vueOriginale);
             }
         } else {
             _jugador.setTextureRect(sf::IntRect((actual * _offsetPlayer.x), 0, 32, 32));
+            _ventana.setView(_vueOriginale);
         }
+
         tiempo.restart();
     }
 }
+
 
 void Display::actualizarVelocidad()
 {
