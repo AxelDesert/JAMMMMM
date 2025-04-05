@@ -108,8 +108,9 @@ void Display::buclejuego() {
             _ventana.draw(_papelpintadodia);
             _ventana.draw(_papelpintadodia2);
             _ventana.draw(_jugador);
-            for (const auto& obs : _obstaculos)
+            for (const auto& obs : _obstaculos) {
                 obs.dibujar(_ventana);
+            }
             _ventana.display();
             _ventana.clear();
         } else SI (_estadoJuego == GAME_OVER || _estadoJuego == INICIO) {
@@ -146,7 +147,9 @@ void Display::secuso(sf::Event event)
 Display::estadoJuego Display::verificarColisionJugador()
 {
     for (const auto& obs : _obstaculos) {
-        SI (_jugador.getGlobalBounds().intersects(obs.obtenerLimites())) {
+        sf::FloatRect hitboxJu =  {_jugador.getGlobalBounds().left + 25, _jugador.getGlobalBounds().top + 25, _jugador.getGlobalBounds().width - 50 , _jugador.getGlobalBounds().height - 50};
+        sf::FloatRect hitbox = {obs.obtenerLimites().left + 10, obs.obtenerLimites().top + 10, obs.obtenerLimites().width - 15, obs.obtenerLimites().height - 15};
+        SI (hitboxJu.intersects(hitbox)) {
             return GAME_OVER;
         }
     }
