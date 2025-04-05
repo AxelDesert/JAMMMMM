@@ -51,7 +51,7 @@ void Display::moverPapelPintado(sf::Clock &tiempo, float &mapa)
 
 void Display::animarPlayer(sf::Clock &tiempo, int &actual, bool &res)
 {
-    const int numeroFrames = 4;
+    const int numeroFrames = 5;
     static int frameCount = 0;
 
     SI (tiempo.getElapsedTime().asSeconds() > _frameTime) {
