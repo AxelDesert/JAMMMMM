@@ -156,6 +156,10 @@ void Display::buclejuego() {
             _ventana.clear();
         } else SI (_estadoJuego == GAME_OVER || _estadoJuego == INICIO) {
             SI (temporizadorMenu.getElapsedTime().asSeconds() >= 15.0f) {
+                SI (_estadoJuego != INICIO) {
+                    res = true;
+                    introTimer.restart();
+                    _soundManager.playSound(RES);
                 _estadoJuego = EN_CURSO;
                 _jugador.setPosition(_postionPlayer.x, _postionPlayer.y);
                 _obstaculos.clear();
@@ -163,9 +167,7 @@ void Display::buclejuego() {
                 _velocidadBase = 1.0f;
                 _tiempoEntreObstaculos = 1.0f;
                 temporizadorMenu.restart();
-                res = true;
-                introTimer.restart();
-                _soundManager.playSound(RES);
+                }
             } else {
                 mostrarMenuGameOver();
             }
