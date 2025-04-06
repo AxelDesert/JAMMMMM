@@ -10,6 +10,7 @@
 #define SI if
 #define MIENTRAS while
 #include <math.h>
+#include <fstream>
 
 Display::Display() : _ventana(sf::VideoMode(1000, 470), "Mi_phoenix") {
     _papelpintadodia = configuarPapelPintadoDia();
@@ -18,7 +19,15 @@ Display::Display() : _ventana(sf::VideoMode(1000, 470), "Mi_phoenix") {
     _jugador = configuarAssetJugador();
     _frameTime = 0.15f;
     _santos = 0;             // Score actuel
-    _highScore = 0;          // Meilleur score
+    std::ifstream fichier(".hscore");
+    int ch;
+    if (fichier.fail()) {
+        std::cerr << "Erreur lors de la lecture du chiffre." << std::endl;
+        exit(84);
+    }
+    fichier >> ch;
+    fichier.close();
+   _highScore = ch;          // Meilleur score
     _velocidadBase = 0.2f;   // Vitesse de base
     _tiempoDeActualizacion = 0.002f;  // Temps entre chaque mise à jour (remplace _goncalves)
     SI (!_textureObstaculo.loadFromFile("assets/littleWater.png"))
@@ -83,13 +92,13 @@ void Display::animarPlayer(sf::Clock &tiempo, int &actual, bool &res)
 
 void Display::actualizarVelocidad()
 {
-    _velocidadBase = 1.0f + (_santos / 4000.0f) * 0.2f;
+    _velocidadBase = 1.0f + (_santos / 4000.0f) * 2.0f;
 
     SI (_velocidadBase > 3.0f) {
         _velocidadBase = 3.0f;
     }
 
-    _tiempoEntreObstaculos = 1.0f;
+    _tiempoEntreObstaculos = 0.7f;
 }
 
 void Display::buclejuego() {
@@ -103,6 +112,7 @@ void Display::buclejuego() {
     float mapa = 0;
     bool res = false;
     sf::Event event;
+    configuarPapelPintadoNoche();
 
     MIENTRAS (_ventana.isOpen()) {
         MIENTRAS (_ventana.pollEvent(event)) {
@@ -112,8 +122,25 @@ void Display::buclejuego() {
         SI (_estadoJuego == EN_CURSO) {
             _santos += 0.2f * _velocidadBase;
 
-            SI (_santos > _highScore) {
-                _highScore = _santos;
+            SI (_santos > _highScore * 10) {
+                std::ofstream fichier(".hscore", std::ios::trunc); // `trunc` efface le contenu
+                if (!fichier.is_open()) {
+                    std::cerr << "Erreur : impossible d'ouvrir le fichier." << std::endl;
+                    exit(84);
+                }
+                int gato = _santos;
+
+                _highScore = gato / 10;
+                fichier << _highScore;
+                fichier.close();
+            }
+            SI (_santos > 10000) {
+                _papelpintadodia.setTexture(_textureBackgroundN);
+                _papelpintadodia2.setTexture(_textureBackgroundN);
+            }
+            SI (_santos > 20000) {
+                _papelpintadodia.setTexture(_textureBackground);
+                _papelpintadodia2.setTexture(_textureBackground);
             }
             actualizarVelocidad();
 
@@ -207,9 +234,26 @@ void Display::monstrarSantos(int posX, int posY, int size)
     std::string gato = std::to_string((intsanto / 10));
     _textsantos.setString("Score : " + gato);
     _textsantos.setCharacterSize(size);
-    _textsantos.setFillColor(sf::Color::Black);
+    _textsantos.setFillColor(sf::Color::Red);
     _textsantos.setStyle(sf::Text::Bold);
     _textsantos.setPosition(posX, posY);
+}
+void Display::monstrarMejorSantos(int posX, int posY, int size)
+{
+    sf::Font font;
+    if (!font.loadFromFile("assets/Roboto.ttf")) {
+        std::cout << "no" << std::endl;
+        exit(84);
+    }
+    _font = font;
+    _mejorscore.setFont(_font);
+    int intsanto = _highScore;
+    std::string gato = std::to_string((intsanto));
+    _mejorscore.setString("Mejor Score : " + gato);
+    _mejorscore.setCharacterSize(size);
+    _mejorscore.setFillColor(sf::Color::Red);
+    _mejorscore.setStyle(sf::Text::Bold);
+    _mejorscore.setPosition(posX, posY);
 }
 
 Display::estadoJuego Display::verificarColisionJugador()
@@ -245,4 +289,9 @@ sf::Sprite Display::configuarPapelPintadoDia() {
     back.setPosition({0, 0});
     back.setScale({1.5, 1.5});
     return back;
+}
+
+void Display::configuarPapelPintadoNoche() {
+    SI (!_textureBackgroundN.loadFromFile("assets/noche.png"))
+        std::cout << "pas d'asset" << std::endl;
 }

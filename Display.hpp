@@ -37,6 +37,8 @@ public:
     estadoJuego verificarColisionJugador();
     void mostrarMenuGameOver();
     void monstrarSantos(int posX, int posY, int size);
+    void monstrarMejorSantos(int posX, int posY, int size);
+    void configuarPapelPintadoNoche();
 
 private:
     float _tiempoDeActualizacion;
@@ -55,6 +57,7 @@ private:
     sf::Vector2f _postionPlayer;
     sf::Texture _texturePlayer;
     sf::Texture _textureBackground;
+    sf::Texture _textureBackgroundN;
     sf::Vector2i _offsetPlayer;
     float _frameTime;
     std::vector<Obstaculo> _obstaculos;
@@ -64,6 +67,7 @@ private:
     SoundManager _soundManager;
     sf::View _vueOriginale;
     sf::Text _textsantos;
+    sf::Text _mejorscore;
     sf::Font _font;
 };
 
