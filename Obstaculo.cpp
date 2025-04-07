@@ -28,7 +28,7 @@ void Obstaculo::dibujar(sf::RenderWindow& ventana) const
 
 bool Obstaculo::estaFueraDePantalla() const
 {
-    return _sprite.getPosition().x + _sprite.getGlobalBounds().width < 0;
+    return obtenerPosicion().x + obtenerLimites().width < 0;
 }
 
 const sf::FloatRect Obstaculo::obtenerLimites() const

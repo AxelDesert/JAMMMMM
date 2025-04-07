@@ -12,13 +12,13 @@
 #include <math.h>
 #include <fstream>
 
-Display::Display() : _ventana(sf::VideoMode(1000, 470), "Mi_phoenix") {
+Display::Display() : _ventana(sf::VideoMode(1000, 470), "Mi_phoenix", sf::Style::Default | sf::Style::Resize) {
     _papelpintadodia = configuarPapelPintadoDia();
     _papelpintadodia2 = configuarPapelPintadoDia();
     _papelpintadodia2.setPosition(_papelpintadodia.getGlobalBounds().width, 0);
     _jugador = configuarAssetJugador();
     _frameTime = 0.15f;
-    _santos = 0;             // Score actuel
+    _santos = 0;
     std::ifstream fichier(".hscore");
     int ch;
     if (fichier.fail()) {
@@ -27,9 +27,9 @@ Display::Display() : _ventana(sf::VideoMode(1000, 470), "Mi_phoenix") {
     }
     fichier >> ch;
     fichier.close();
-   _highScore = ch;          // Meilleur score
-    _velocidadBase = 0.2f;   // Vitesse de base
-    _tiempoDeActualizacion = 0.002f;  // Temps entre chaque mise à jour (remplace _goncalves)
+    _highScore = ch;
+    _velocidadBase = 0.2f;
+    _tiempoDeActualizacion = 0.002f;
     SI (!_textureObstaculo.loadFromFile("assets/littleWater.png"))
         std::cout << "no d'asset" << std::endl;
     _vueOriginale = _ventana.getDefaultView();
@@ -71,7 +71,7 @@ void Display::animarPlayer(sf::Clock &tiempo, int &actual, bool &res)
             _jugador.setTextureRect(sf::IntRect((actual * _offsetPlayer.x), 64, 32, 32));
             frameCount++;
             sf::View zoomView = _vueOriginale;
-            zoomView.setSize(_vueOriginale.getSize().x / 1.5f, _vueOriginale.getSize().y / 1.5f); // zoom x1.5
+            zoomView.setSize(_vueOriginale.getSize().x / 1.5f, _vueOriginale.getSize().y / 1.5f);
             zoomView.setCenter(_jugador.getPosition());
             _ventana.setView(zoomView);
             SI (frameCount >= zoomFrames) {
@@ -123,7 +123,7 @@ void Display::buclejuego() {
             _santos += 0.2f * _velocidadBase;
 
             SI (_santos > _highScore * 10) {
-                std::ofstream fichier(".hscore", std::ios::trunc); // `trunc` efface le contenu
+                std::ofstream fichier(".hscore", std::ios::trunc);
                 if (!fichier.is_open()) {
                     std::cerr << "Erreur : impossible d'ouvrir le fichier." << std::endl;
                     exit(84);
@@ -219,6 +219,16 @@ void Display::secuso(sf::Event event)
             }
         }
     }
+    SI (event.type == sf::Event::Resized) {
+        sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
+        _ventana.setView(sf::View(visibleArea));
+        _vueOriginale = _ventana.getView();
+        float scaleX = static_cast<float>(event.size.width) / 1000.0f;
+        float scaleY = static_cast<float>(event.size.height) / 470.0f;
+        _papelpintadodia.setScale(1.5f * scaleX, 1.5f * scaleY);
+        _papelpintadodia2.setScale(1.5f * scaleX, 1.5f * scaleY);
+        _papelpintadodia2.setPosition(_papelpintadodia.getGlobalBounds().width, 0);
+    }
 }
 
 void Display::monstrarSantos(int posX, int posY, int size)
@@ -238,6 +248,7 @@ void Display::monstrarSantos(int posX, int posY, int size)
     _textsantos.setStyle(sf::Text::Bold);
     _textsantos.setPosition(posX, posY);
 }
+
 void Display::monstrarMejorSantos(int posX, int posY, int size)
 {
     sf::Font font;
